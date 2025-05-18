@@ -27,7 +27,7 @@ jobs:
         run: bun install
 
       - name: Build project
-        run: bun --bun run build 
+        run: bun run build 
 
       - name: Deploy Cloudflare Worker
         uses: cloudflare/wrangler-action@v3
