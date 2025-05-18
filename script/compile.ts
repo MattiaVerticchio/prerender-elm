@@ -82,6 +82,7 @@ async function runBuild() {
         const buildOutput = await Bun.build({
             entrypoints: [frontendEntrypoint],
             outdir: dist,
+            minify: !isDebug,
             naming: '[dir]/[name]-[hash].[ext]',
         })
 
