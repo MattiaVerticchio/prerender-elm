@@ -113,6 +113,7 @@ async function runBuild() {
             entrypoints: [backendEntrypoint],
             outdir: "functions",
             naming: '[dir]/[[[main]].js',
+            external: ["cloudflare:workers"],
             minify: !isDebug,
             define: { FRONTEND_MODULE: JSON.stringify(fileName) }
         })
