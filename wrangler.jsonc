@@ -5,6 +5,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "prerender-elm",
+	"main": "functions/[[main]].js",
 	"compatibility_date": "2025-05-08",
 	"assets": {
 		"directory": "./dist"
