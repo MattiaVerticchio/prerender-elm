@@ -91,7 +91,7 @@ viewToResponse elmJs data head { title, status, body } =
 
         viewHead : Html msg
         viewHead =
-            Html.node "head" [] (viewCharset :: viewTitle :: viewRestOfHead)
+            Html.node "head" [] (viewCharset :: viewViewport :: viewTitle :: viewRestOfHead)
 
         viewBody : Html msg
         viewBody =
@@ -100,6 +100,14 @@ viewToResponse elmJs data head { title, status, body } =
         viewCharset : Html msg
         viewCharset =
             Html.node "meta" [ Attr.attribute "charset" "utf-8" ] []
+
+        viewViewport : Html msg
+        viewViewport =
+            Html.node "meta"
+                [ Attr.name "viewport"
+                , Attr.attribute "content" "width=device-width, initial-scale=1"
+                ]
+                []
 
         viewTitle : Html msg
         viewTitle =
