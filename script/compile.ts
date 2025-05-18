@@ -71,7 +71,9 @@ async function runBuild() {
         if (isDebug) {
             await $`elm make src/Frontend.elm --debug --output=../frontend.js`.cwd("tmp/frontend");
         } else {
+            try {
             await $`bun run elm-optimize-level-2 make src/Frontend.elm --optimize-speed --output=../frontend.js`.cwd("tmp/frontend");
+            } catch {}
         }
 
         const frontendRawSource: string =
