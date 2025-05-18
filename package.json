@@ -1,0 +1,22 @@
+{
+  "name": "prerender-elm",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "run-pty % bun run script/compile.ts --dev --debug % bun run wrangler pages dev .",
+    "start": "bun dev",
+    "build": "bun run script/compile.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "elm-optimize-level-2": "^0.3.5",
+    "run-pty": "^5.0.0",
+    "wrangler": "^4.15.2"
+  },
+  "module": "frontend.ts",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
