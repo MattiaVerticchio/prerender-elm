@@ -13,6 +13,7 @@ import Request exposing (Request)
 import Response exposing (Response)
 import Route exposing (Route(..))
 import Status
+import Time
 import Url exposing (Url)
 import View exposing (View)
 
@@ -44,7 +45,7 @@ initServer value =
         Ok request ->
             let
                 data =
-                    42
+                    Time.posixToMillis request.time
             in
             case Url.fromString request.url of
                 Nothing ->
