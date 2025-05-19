@@ -9,6 +9,7 @@
     "build": "bun run script/compile.ts"
   },
   "devDependencies": {
+    "@swc/core": "^1.11.24",
     "@types/bun": "latest",
     "elm": "^0.19.1-6",
     "elm-optimize-level-2": "^0.3.5",

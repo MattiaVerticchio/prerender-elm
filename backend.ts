@@ -1,7 +1,6 @@
 import { Elm } from './tmp/backend.mjs';
-import { WorkerEntrypoint } from "cloudflare:workers";
 
-export default class extends WorkerEntrypoint {
+export default {
     async fetch(request: Request): Promise<Response> {
 
         let bodyContent: string | null = null;
@@ -47,7 +46,7 @@ export default class extends WorkerEntrypoint {
             }
         });
     }
-}
+} satisfies ExportedHandler<Env>;
 
 
 

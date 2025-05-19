@@ -3,6 +3,7 @@ import elmConfig from "../elm.json";
 import { cpSync, watch } from "fs";
 import { readdirSync } from "fs";
 import * as Path from "path";
+import * as swc from "@swc/core";
 
 const backendJs = Path.join("tmp", "backend.js")
 const backendMjs = Path.join("tmp", "backend.mjs")
@@ -82,14 +83,20 @@ async function runBuild() {
         const buildOutput = await Bun.build({
             entrypoints: [frontendEntrypoint],
             outdir: dist,
-            minify: !isDebug,
             naming: '[dir]/[name]-[hash].[ext]',
         })
 
+        const buildPath: string =
+            (buildOutput.outputs[0] as BuildArtifact).path
+
+        if (!isDebug) {
+            const bundledFile = Bun.file(buildPath)
+            const bundledSource = await bundledFile.text()
+            await Bun.write(bundledFile, await minify(bundledSource))
+        }
+
         const fileName: string =
-            Path.basename(
-                (buildOutput.outputs[0] as BuildArtifact).path
-            )
+            Path.basename(buildPath)
 
 
         // Compile Elm
@@ -110,15 +117,20 @@ async function runBuild() {
 
         // Build the worker
 
-        const _ = await Bun.build({
+        const bundledBackend = await Bun.build({
             entrypoints: [backendEntrypoint],
             outdir: "functions",
             naming: '[dir]/[[[main]].js',
             external: ["cloudflare:workers"],
-            minify: !isDebug,
             define: { FRONTEND_MODULE: JSON.stringify(fileName) }
         })
 
+        if (!isDebug) {
+            const bundledBackendPath: string = (bundledBackend.outputs[0] as BuildArtifact).path
+            const bundledBackendFile = Bun.file(bundledBackendPath)
+            const bundledBackendSource = await bundledBackendFile.text()
+            await Bun.write(bundledBackendFile, await minify(bundledBackendSource))
+        }
 
     } catch (error) {
 
@@ -257,3 +269,42 @@ toDocument view =
     , body = view.body 
     }
 `
+
+
+async function minify(code: string): Promise<string> {
+
+    const pureFuncs: string[] = [
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6",
+        "F7",
+        "F8",
+        "F9",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+    ]
+
+    const minified =
+        await swc.minify(code, {
+            compress: {
+                pure_funcs: pureFuncs,
+                pure_getters: true,
+                unsafe_comps: true,
+                unsafe: true,
+            },
+            mangle: {
+                reserved: pureFuncs,
+            },
+            module: true,
+        })
+
+    return minified.code;
+}
